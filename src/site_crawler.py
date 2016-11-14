@@ -67,15 +67,16 @@ class SiteCrawler():
         #Merge list of list words to list of words.
         self.mWords = list(itertools.chain.from_iterable(word_list))
 
-
+'''
+#TEST RUN
 c = SiteCrawler()
-r = c.crawl('http://www.lipsum.com/feed/html')
-with open('c:\\Source\\site_rank\\raw_data\\test_data.txt', 'w') as of:
+r = c.crawl('cnn.com')
+with open('c:\\Source\\site_rank\\raw_data\\test_cnn_data.txt', 'w') as of:
     for w in r:
         
         try:
             of.write(w + '\n')
         except UnicodeEncodeError:
             gLogger.error("Encoding error, skip {}".format(w.encode('utf-8')))
-
+'''
         
