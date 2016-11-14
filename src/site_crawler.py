@@ -2,6 +2,7 @@ from lxml import html
 import requests
 import logging
 import itertools 
+import string
 
 logging.basicConfig(level=logging.INFO)
 gLogger = logging.getLogger('SITERank') 
@@ -26,7 +27,7 @@ class SiteCrawler():
         self.parse_text()
 
         #Sanitize short entries from word list.
-        return [x.strip() for x in self.mWords if len(x)>limit]
+        return [self.remove_special_cahrs(x) for x in self.mWords if len(x)>limit]
 
 
     def load_page(self):
@@ -67,6 +68,11 @@ class SiteCrawler():
         #Merge list of list words to list of words.
         self.mWords = list(itertools.chain.from_iterable(word_list))
 
+    def remove_special_cahrs(self, s):
+        #return ''.join([x for x in s.strip() if x.isalnum()])
+        return s.strip().strip(string.punctuation)
+
+'''
 '''
 #TEST RUN
 c = SiteCrawler()
@@ -78,5 +84,5 @@ with open('c:\\Source\\site_rank\\raw_data\\test_cnn_data.txt', 'w') as of:
             of.write(w + '\n')
         except UnicodeEncodeError:
             gLogger.error("Encoding error, skip {}".format(w.encode('utf-8')))
-'''
+
         
