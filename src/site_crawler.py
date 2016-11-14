@@ -4,7 +4,7 @@ import logging
 import itertools 
 
 logging.basicConfig(level=logging.INFO)
-gLogger = logging.getLogger(__name__) 
+gLogger = logging.getLogger('SITERank') 
 
 class SiteCrawler():
     '''
@@ -57,7 +57,14 @@ class SiteCrawler():
         '''
 
         gLogger.info('Start parsing text from {}'.format(self.mSite))
-        word_list = [x.split() for x in self.mTree.xpath('//body//*[not(self::script)]/text()')]
+
+        #Parse all text blocks.
+        text_list = self.mTree.xpath('//body//*[not(self::script)]/text()')
+        
+        #Create word list from text blocks.
+        word_list = [x.split() for x in text_list]
+        
+        #Merge list of list words to list of words.
         self.mWords = list(itertools.chain.from_iterable(word_list))
 
 
