@@ -13,12 +13,12 @@ class NltkWrapper():
     def tokenize(self, text):
         return word_tokenize(text)
 
-    def get_sanitized_word_list(self, text):
-        return self.remove_stopword(self.tokenize(text))
+    def get_sanitized_word_list(self, text, limit=3):
+        return [word for word in self.remove_stopword(self.tokenize(text)) if len(word) > limit ]
 
-'''
+"""
 TEST
-'''
+
 
 sample = '''Anyone who reads Old and Middle English literary texts 
 will be familiar with the mid-brown volumes of the EETS, with the symbol 
@@ -33,3 +33,5 @@ Without EETS editions, study of medieval English texts would hardly be possible.
 processor = NltkWrapper('english')
 
 print(processor.get_sanitized_word_list(sample))
+
+"""
