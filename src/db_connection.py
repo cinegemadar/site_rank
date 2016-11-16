@@ -120,6 +120,35 @@ class RankDBHandler():
                 site_id=site, word_id=word, count=count))
         self.current_session.commit()
 
+    def add_word(self, word):
+        '''
+        Add new word to database. Returns the id of the matching entry.
+        '''
+        result = self.current_session.query(Word).filter(Word.word == word)
+
+        if(result.count() == 0):
+            db_word = Word(word=word)
+            self.current_session.merge(db_word)
+            self.current_session.commit()
+        return self.current_session.query(Word).filter(Word.word == word)[0].id        
+
+    def get_site_list(self):
+        '''
+        '''
+        return [x.url.encode('utf-8') for x in self.current_session.query(Site)]
+    # def add_site(self, site):
+    #     '''
+    #     Add site to database. Returns the id of the matching entry.
+    #     '''
+
+    #     result = self.current_session.query(Site).filter(Site.site == site)
+
+    #     if(result.count() == 0):
+    #         db_site = Site(site=site)
+    #         self.current_session.merge(db_site)
+    #         self.current_session.commit()
+    #     return self.current_session.query(Site).filter(Site.site == site)[0].id
+
 ''' TEST
 engine = create_engine('sqlite:///..\\db\\ranking.db', echo = False)
 Base.metadata.create_all(engine, checkfirst=True)
@@ -131,5 +160,8 @@ for i in t:
 '''
 t_handler = RankDBHandler()
 t_handler.update_containment(5, 6)
-
+print(t_handler.add_word('test_alma'))
+print(t_handler.add_word('test_korte'))
+print(t_handler.get_site_list())
+# print(t_handler.add_site('test_site_1'))
 # print(t_handler.test())
