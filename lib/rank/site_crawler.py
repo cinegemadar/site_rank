@@ -31,7 +31,11 @@ class SiteCrawler():
 
     def load_site(self):
         
-        logger.info('Loading {}'.format(self.site))
+        try:
+            logger.info('Loading {}'.format(self.site))
+        except requests.exceptions.ConnectionError:
+            logger.error('Cannot open {}'.format(self.site))
+            return '' 
         self.page = requests.get(self.site)
         
 

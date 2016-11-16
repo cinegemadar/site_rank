@@ -136,6 +136,25 @@ class RankDBHandler():
         '''
         '''
         return [x.url.encode('utf-8') for x in self.current_session.query(Site)]
+
+    def get_site_id(self, site):
+        '''
+        '''
+        id = self.current_session.query(Site).filter(Site.url.ilike('%{}%'.format(site)))[0].id
+        if id:
+            return id
+        else:
+            return -1
+
+    def get_word_id(self, word):
+        '''
+        '''
+        id = self.current_session.query(Word).filter(Word.word == word)[0].id
+        if id:
+            return id
+        else:
+            return -1
+
     # def add_site(self, site):
     #     '''
     #     Add site to database. Returns the id of the matching entry.
@@ -157,11 +176,11 @@ session = Session()
 t = session.query(Site)
 for i in t:
     print(i)
-'''
-t_handler = RankDBHandler()
-t_handler.update_containment(5, 6)
-print(t_handler.add_word('test_alma'))
-print(t_handler.add_word('test_korte'))
-print(t_handler.get_site_list())
+# t_handler = RankDBHandler()
+# t_handler.update_containment(5, 6)
+# print(t_handler.add_word('test_alma'))
+# print(t_handler.add_word('test_korte'))
+# print(t_handler.get_site_list())
 # print(t_handler.add_site('test_site_1'))
 # print(t_handler.test())
+'''
