@@ -1,6 +1,3 @@
-import csv
-import hashlib
-import json
 from sqlalchemy import Column, Integer, String, create_engine, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -21,7 +18,8 @@ class Site(Base):
     category = Column(String(20))
 
     def __repr__(self):
-        return '[Site:] {}\n[Category:] {}\n==============='.format(self.url, self.category)
+        return '[Site:] {}\n[Category:] {}\n==============='.format(
+            self.url, self.category)
 
     def __str__(self):
         return self.__repr__()
@@ -69,13 +67,13 @@ class RankDBHandler():
 
     def __init__(self):
 
-        #Create DB engine.
+        # Create DB engine.
         self.engine = create_engine(db_location, echo=False)
 
-        #Generate metadata.
+        # Generate metadata.
         Base.metadata.create_all(self.engine, checkfirst=True)
 
-        #Create session.
+        # Create session.
         Session = sessionmaker(bind=self.engine)
         self.current_session = Session()
 
@@ -86,7 +84,6 @@ class RankDBHandler():
 
         self.current_session.commit()
         self.current_session.close()
-
 
     def test_connection(self):
         '''
@@ -99,10 +96,11 @@ class RankDBHandler():
         Insert or update cointainment data.
         '''
 
-        #Check in DB if entry exists.
-        result = self.current_session.query(Containment).filter(Containment.site_id == site, Containment.word_id == word)
+        # Check in DB if entry exists.
+        result = self.current_session.query(Containment).filter(
+            Containment.site_id == site, Containment.word_id == word)
 
-        #If exits, update counter.
+        # If exits, update counter.
         if(result.count() > 0):
             logger.info('Update entry.')
 
@@ -110,10 +108,10 @@ class RankDBHandler():
                 result[0].count += 1
             else:
                 result[0].count = count
-            
+
             logger.debug(result[0])
 
-        #Otherwise create new entry
+        # Otherwise create new entry
         else:
             logger.info('Add new entry.')
             self.current_session.merge(Containment(
@@ -130,17 +128,18 @@ class RankDBHandler():
             db_word = Word(word=word)
             self.current_session.merge(db_word)
             self.current_session.commit()
-        return self.current_session.query(Word).filter(Word.word == word)[0].id        
+        return self.current_session.query(Word).filter(Word.word == word)[0].id
 
     def get_site_list(self):
-        '''
-        '''
+        """"""
+
         return [x.url.encode('utf-8') for x in self.current_session.query(Site)]
 
     def get_site_id(self, site):
         '''
         '''
-        id = self.current_session.query(Site).filter(Site.url.ilike('%{}%'.format(site)))[0].id
+        id = self.current_session.query(Site).filter(
+            Site.url.ilike('%{}%'.format(site)))[0].id
         if id:
             return id
         else:
@@ -166,7 +165,7 @@ class RankDBHandler():
     #         db_site = Site(site=site)
     #         self.current_session.merge(db_site)
     #         self.current_session.commit()
-    #     return self.current_session.query(Site).filter(Site.site == site)[0].id
+    # return self.current_session.query(Site).filter(Site.site == site)[0].id
 
 ''' TEST
 engine = create_engine('sqlite:///..\\db\\ranking.db', echo = False)
