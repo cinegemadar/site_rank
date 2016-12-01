@@ -1,11 +1,13 @@
 from nltk.corpus import stopwords
 from nltk import word_tokenize
+from nltk.stem.porter import PorterStemmer
 
 class NltkWrapper():
 
 
     def __init__(self, lang='english'):
         self.stopwords = stopwords.words(lang)
+        self.stemmer = PorterStemmer()
 
     def remove_stopword(self, word_list):
         return [word for word in word_list if word not in self.stopwords]
@@ -14,7 +16,7 @@ class NltkWrapper():
         return word_tokenize(text)
 
     def get_sanitized_word_list(self, text, limit=3):
-        return [word for word in self.remove_stopword(self.tokenize(text)) if len(word) > limit ]
+        return [self.stemmer.stem(word) for word in self.remove_stopword(self.tokenize(text)) if len(word) > limit ]
 
 """
 TEST
